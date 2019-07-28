@@ -12,6 +12,17 @@ local function stop_standing(player)
 	def._on_stop_standing(data.standing, node, player)
 end
 
+local callbacks = {}
+
+function M.register_callback(f)
+	table.insert(callbacks, f)
+	return #callbacks
+end
+
+function M.remove_callback(idx)
+	table.remove(callbacks, idx)
+end
+
 local step_time = tonumber(minetest.settings:get("gnode_augment.step_time")) or 0.3
 local timer = 0
 minetest.register_globalstep(function(dtime)
@@ -44,6 +55,10 @@ minetest.register_globalstep(function(dtime)
 
 		if stand_def._on_standing then
 			stand_def._on_standing(stand_pos, data.nodes.stand, player)
+		end
+
+		for _,f in ipairs(callbacks) do
+			f(player, data)
 		end
 	end
 end)
