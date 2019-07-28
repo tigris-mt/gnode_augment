@@ -3,15 +3,6 @@ gnode_augment = M
 
 M.players = {}
 
-local function stop_standing(player)
-	local data = M.players[player:get_player_name()]
-
-	local node = minetest.get_node(data.standing)
-	local def = minetest.registered_nodes[node.name]
-
-	def._on_stop_standing(data.standing, node, player)
-end
-
 local callbacks = {}
 
 function M.register_callback(f)
@@ -47,12 +38,6 @@ minetest.register_globalstep(function(dtime)
 		}
 
 		local stand_def = minetest.registered_nodes[data.nodes.stand.name]
-
-		if data.standing and not vector.equals(data.standing, stand_pos) then
-			stop_standing(player)
-		end
-		data.standing = stand_def._on_stop_standing and stand_pos or nil
-
 		if stand_def._on_standing then
 			stand_def._on_standing(stand_pos, data.nodes.stand, player)
 		end
@@ -75,16 +60,9 @@ minetest.register_on_joinplayer(function(player)
 			bottom = ignore,
 			stand = ignore,
 		},
-		standing = nil,
 	}
 end)
 
 minetest.register_on_leaveplayer(function(player)
-	local data = M.players[player:get_player_name()]
-
-	if data.standing then
-		stop_standing(player)
-	end
-
 	M.players[player:get_player_name()] = nil
 end)
