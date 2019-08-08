@@ -35,6 +35,7 @@ minetest.register_globalstep(function(dtime)
 			top = minetest.get_node(vector.add(pos, vector.new(0, prop.eye_height, 0))),
 			bottom = minetest.get_node(vector.add(pos, vector.new(0, prop.stepheight / 2, 0))),
 			stand = minetest.get_node(stand_pos),
+			stand_pos = stand_pos,
 		}
 
 		local stand_def = minetest.registered_nodes[data.nodes.stand.name]
