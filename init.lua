@@ -54,6 +54,7 @@ local ignore = {
 	param1 = 0,
 	param2 = 0,
 }
+
 minetest.register_on_joinplayer(function(player)
 	M.players[player:get_player_name()] = {
 		nodes = {
