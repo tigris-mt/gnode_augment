@@ -39,7 +39,7 @@ minetest.register_globalstep(function(dtime)
 		}
 
 		local stand_def = minetest.registered_nodes[data.nodes.stand.name]
-		if stand_def._on_standing then
+		if stand_def and stand_def._on_standing then
 			stand_def._on_standing(stand_pos, data.nodes.stand, player)
 		end
 
