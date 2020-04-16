@@ -25,26 +25,28 @@ minetest.register_globalstep(function(dtime)
 
 	for _,player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
-		local prop = player:get_properties()
 		local data = M.players[name]
-		local pos = player:get_pos()
+		if data then
+			local prop = player:get_properties()
+			local pos = player:get_pos()
 
-		local stand_pos = vector.round(vector.add(pos, vector.new(0, -0.1, 0)))
+			local stand_pos = vector.round(vector.add(pos, vector.new(0, -0.1, 0)))
 
-		data.nodes = {
-			top = minetest.get_node(vector.add(pos, vector.new(0, prop.eye_height, 0))),
-			bottom = minetest.get_node(vector.add(pos, vector.new(0, prop.stepheight / 2, 0))),
-			stand = minetest.get_node(stand_pos),
-			stand_pos = stand_pos,
-		}
+			data.nodes = {
+				top = minetest.get_node(vector.add(pos, vector.new(0, prop.eye_height, 0))),
+				bottom = minetest.get_node(vector.add(pos, vector.new(0, prop.stepheight / 2, 0))),
+				stand = minetest.get_node(stand_pos),
+				stand_pos = stand_pos,
+			}
 
-		local stand_def = minetest.registered_nodes[data.nodes.stand.name]
-		if stand_def and stand_def._on_standing then
-			stand_def._on_standing(stand_pos, data.nodes.stand, player)
-		end
+			local stand_def = minetest.registered_nodes[data.nodes.stand.name]
+			if stand_def and stand_def._on_standing then
+				stand_def._on_standing(stand_pos, data.nodes.stand, player)
+			end
 
-		for _,f in ipairs(callbacks) do
-			f(player, data)
+			for _,f in ipairs(callbacks) do
+				f(player, data)
+			end
 		end
 	end
 end)
